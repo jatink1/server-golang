@@ -2,7 +2,6 @@ package models
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"log"
 
@@ -40,23 +39,19 @@ func CreateUser(userObj User) bool {
 	return created
 }
 
-func GetUserById(userId string) User{
+func GetUserById(userId string) User {
 
 	db := config.GetDB()
 	collection := db.Collection(userCollection)
 
-	//fmt.Println(collection)
-
 	// steps to get user by id
 	id, _ := primitive.ObjectIDFromHex(userId)
-	fmt.Println("UserId : ", id)
 
 	filter := bson.D{{Key: "_id", Value: id}}
 
-	
 	err := collection.FindOne(context.TODO(), filter).Decode(&bsonString)
 
-	if err != nil{
+	if err != nil {
 		log.Println("Failed to find user with userid: ", userId)
 		fmt.Println(err)
 	}
@@ -65,8 +60,6 @@ func GetUserById(userId string) User{
 	// marshal & unmarshall
 	finalBytes, _ := bson.Marshal(bsonString)
 	bson.Unmarshal(finalBytes, &result)
-	fmt.Println("RESULT ", result)
-	// fmt.Println("Username: ", result.Username)
 
 	return result
 }
@@ -76,16 +69,21 @@ func GetUserIdByUsername(username string) string {
 
 	id := ""
 
-	collection := config.GetDB().Collection(userCollection)
-	filter := bson.D{{Key: "Username", Value: username}}
-	resp := collection.FindOne(context.TODO(), filter).Decode(&jsonString)
+	fmt.Println("Inside GetUserIdByUsername()")
 
-	if resp != nil{
+	collection := config.GetDB().Collection(userCollection)
+	fmt.Println("75: Inside GetUserIdByUsername()")
+	filter := bson.D{{Key: "Username", Value: username}}
+	log.Printf("%v 77: Inside GetUserIdByUsername()", filter)
+	resp := collection.FindOne(context.TODO(), filter).Decode(&bsonString)
+	fmt.Println("79: Inside GetUserIdByUsername()")
+
+	if resp != nil {
 		log.Println("Failed to find user with username : ", username)
 	}
-	res,_ := json.Marshal(resp)
-
-	fmt.Println("RESPONSE : ", res)
+	res, _ := bson.Marshal(resp)
+	bson.Unmarshal(res, &resp)
+	fmt.Println("RESPONSE : ", resp)
 	return id
 }
 

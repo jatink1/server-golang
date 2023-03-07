@@ -11,9 +11,11 @@ import (
 func UserContoller(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Inside UserController() in controllers package")
 
-	res := models.GetUserById("63de59aba6675068c900fc6a")
+	//res := models.GetUserById("63e6728f65eeba6ff1884594")
 	//models.GetUserById("jatink")
-	models.GetAllUsers()
+	//models.GetAllUsers()
+
+	res := models.GetUserIdByUsername("jatink")
 
 	resp, _ := json.Marshal(res)
 	w.Header().Set("Content-Type", "application/json")
@@ -21,7 +23,7 @@ func UserContoller(w http.ResponseWriter, r *http.Request) {
 	w.Write(resp)
 }
 
-func Default(w http.ResponseWriter, r *http.Request){
+func Default(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("It works!")
 
 	resp, _ := json.Marshal("It works!")
